@@ -9,10 +9,11 @@ public class Deck : MonoBehaviour
     [SerializeField] private float _cardMoveTime;
 
     private List<Card> _cards = new List<Card>();
+
     public Card[] Cards => _cards.ToArray();
 
 
-    public void SelectCard(Card card) 
+    public void RemoveCard(Card card) 
     {
         _cards.Remove(card);
 
@@ -26,21 +27,11 @@ public class Deck : MonoBehaviour
         RepositionCards();
     }
 
-    public void RemoveCard(Card card)
+    public void DestroyCard(Card card)
     {
         _cards.Remove(card);
 
-        card.GetCanvasGroup.blocksRaycasts = false;
-        card.transform.SetParent(null);
-
-        card.transform.DOScale(Vector3.one * 1.25f, 0.15f).OnComplete(() =>
-            {
-                card.transform.DOScale(Vector3.zero, 0.15f).OnComplete(() =>
-                {
-                    card.transform.DOKill();
-                    Destroy(card.gameObject);
-                });
-            });
+        card.Destroy();
 
         RepositionCards();
     }

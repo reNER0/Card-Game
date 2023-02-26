@@ -7,6 +7,7 @@ public class CardSpawner : MonoBehaviour
     [SerializeField] private Card _card;
     [SerializeField] private int _minCards;
     [SerializeField] private int _maxCards;
+    [SerializeField] private float _cardsSpawnIntervalTime = 0.25f;
 
     private Sequence _sequence;
 
@@ -29,7 +30,7 @@ public class CardSpawner : MonoBehaviour
             card.transform.position = transform.position;
             card.transform.localScale = Vector3.zero;
 
-            _sequence.Append(card.transform.DOScale(Vector3.one, 0.25f).OnComplete(() =>
+            _sequence.Append(card.transform.DOScale(Vector3.one, _cardsSpawnIntervalTime).OnComplete(() =>
             {
                 _deck.AddCard(card);
             }

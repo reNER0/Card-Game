@@ -1,9 +1,11 @@
-﻿using UnityEngine;
+﻿using DG.Tweening;
+using UnityEngine;
 using UnityEngine.EventSystems;
-using DG.Tweening;
 
 public class CardDrag : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDragHandler
 {
+    [SerializeField] private float _cardMoveTime = 0.15f;
+
     private Card _card;
     private Deck _deck;
     private ParticleSystem _shineFX;
@@ -22,42 +24,42 @@ public class CardDrag : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
     public void OnBeginDrag(PointerEventData eventData)
     {
         Table table = transform.GetComponentInParent<Table>();
+
+        _shineFX.Play();
+        _card.GetCanvasGroup.blocksRaycasts = false;
+
         if (table)
         {
             transform.SetParent(table.transform.parent);
             table.RepositionCards();
-        }
-        else
-        {
-            _deck.SelectCard(_card);
-            transform.SetParent(_deck.transform.parent);
+            return;
         }
 
-        _shineFX.Play();
-        _card.GetCanvasGroup.blocksRaycasts = false;
+        _deck.RemoveCard(_card);
+        transform.SetParent(_deck.transform.parent);
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
         Table table = transform.GetComponentInParent<Table>();
-        if (table)
-        {
-            table.RepositionCards();
-        }
-        else
-        {
-            transform.SetParent(_deck.transform);
-            _deck.AddCard(_card);
-        }
 
         _shineFX.Stop();
         _card.GetCanvasGroup.blocksRaycasts = true;
+
+        if (table)
+        {
+            table.RepositionCards();
+            return;
+        }
+
+        transform.SetParent(_deck.transform);
+        _deck.AddCard(_card);
     }
 
     public void OnDrag(PointerEventData eventData)
     {
         transform.DOComplete();
-        transform.DOMove(Input.mousePosition, 0.15f);
-        transform.DORotate(Quaternion.identity.eulerAngles, 0.15f);
+        transform.DOMove(Input.mousePosition, _cardMoveTime);
+        transform.DORotate(Quaternion.identity.eulerAngles, _cardMoveTime);
     }
 }

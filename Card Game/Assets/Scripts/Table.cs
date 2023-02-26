@@ -17,12 +17,12 @@ public class Table : MonoBehaviour
             widghts[i] = transform.GetChild(i).GetComponent<RectTransform>().rect.width;
         }
 
-        float allWidght = widghts.Sum() + _distanceBetweenCards * (transform.childCount - 1);
+        float summaryWidght = widghts.Sum() + _distanceBetweenCards * (transform.childCount - 1);
 
         float currentOffset = 0;
         for (int i = 0; i < transform.childCount; i++)
         {
-            float posX = -allWidght / 2;
+            float posX = -summaryWidght / 2;
             posX += currentOffset;
             posX += _distanceBetweenCards * i;
             posX += widghts[i] / 2;

@@ -23,7 +23,7 @@ public class CardHealth : CardProperty
 
         if (newValue < 1)
         {
-            _cardDeck.RemoveCard(_card);
+            _cardDeck.DestroyCard(_card);
         }
     }
 }
